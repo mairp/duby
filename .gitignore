@@ -1,0 +1,36 @@
+# Credentials
+.env
+creds.txt
+
+# Runtime data
+data/portfolio.db
+data/portfolio.db-shm
+data/portfolio.db-wal
+data/extracted.jsonl
+data/media/
+
+# Telegram
+telegram_session.session
+data/telegram_bot.pid
+
+# Python
+__pycache__/
+*.pyc
+
+# Screenshots / temp
+*.png
+!docs/*.png
+
+# Docker
+docker-compose.override.yml
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code
+.claude/
+
+# Personal
+*analisys*
+*.pdf

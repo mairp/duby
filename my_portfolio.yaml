@@ -1,0 +1,49 @@
+# Sample portfolio — ILLUSTRATIVE DATA ONLY (not real holdings).
+# Edit shares/unit_cost to match your broker, then import:
+#   curl -X POST localhost:8000/api/portfolio/import -H 'Content-Type: application/yaml' --data-binary @my_portfolio.yaml
+#
+# stop_loss and target_price are auto-calculated from ATR after import.
+# You only need to provide: ticker, shares, unit_cost.
+
+mode: replace
+
+positions:
+  - ticker: AAPL
+    shares: 10
+    unit_cost: 175.00
+
+  - ticker: MSFT
+    shares: 6
+    unit_cost: 390.00
+
+  - ticker: GOOGL
+    shares: 8
+    unit_cost: 135.00
+
+  - ticker: AMZN
+    shares: 5
+    unit_cost: 165.00
+
+  - ticker: NVDA
+    shares: 4
+    unit_cost: 105.00
+
+  - ticker: SPY
+    shares: 6
+    unit_cost: 500.00
+
+  - ticker: JPM
+    shares: 8
+    unit_cost: 185.00
+
+  - ticker: KO
+    shares: 25
+    unit_cost: 58.00
+
+  - ticker: COST
+    shares: 2
+    unit_cost: 780.00
+
+  - ticker: AMD
+    shares: 7
+    unit_cost: 140.00

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "finance": {
+      "command": "uv",
+      "args": ["run", "--project", ".", "python", "-m", "agents.mcp_server"],
+      "cwd": "."
+    }
+  }
+}

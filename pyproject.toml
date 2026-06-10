@@ -1,0 +1,25 @@
+[project]
+name = "share-analysis-agent"
+version = "0.1.0"
+description = "AI-powered investment analysis platform — Telegram signal monitoring, market-data enrichment, portfolio tracking, and multi-interface (MCP / Telegram / web / REST) analysis."
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "Apache-2.0" }
+dependencies = [
+    "telethon",
+    "aiohttp",
+    "pymupdf",
+    "python-dotenv",
+    "yfinance",
+    "tradingview-ta",
+    "mcp",
+    "fastapi",
+    "uvicorn",
+    "influxdb-client",
+    "pyyaml",
+    "mplfinance",
+    "matplotlib",
+]
+
+[tool.uv]
+package = false

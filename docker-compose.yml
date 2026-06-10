@@ -1,0 +1,33 @@
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: shares-litellm
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./litellm/config.yaml:/app/config.yaml
+    environment:
+      LLM_BACKEND_API_BASE: ${LLM_BACKEND_API_BASE}
+      LLM_BACKEND_API_KEY: ${LLM_BACKEND_API_KEY}
+    command: ["--config", "/app/config.yaml"]
+
+  influxdb:
+    image: influxdb:2.7
+    container_name: shares-influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: shares-admin-pw
+      DOCKER_INFLUXDB_INIT_ORG: shares
+      DOCKER_INFLUXDB_INIT_BUCKET: telemetry
+      DOCKER_INFLUXDB_INIT_RETENTION: 90d
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: shares-telemetry-token
+
+volumes:
+  influxdb-data:
