@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 
 from core.finance import (
     init_config, call_llm, parse_json_response, resolve_company_ticker,
-    fetch_yahoo_data, get_market_data, _fmt,
+    fetch_yahoo_data, get_market_data, _fmt, _sanitize_html,
     calculate_atr_stop, calculate_default_target,
 )
 import core
@@ -288,7 +288,17 @@ def is_cartera_message(text: str) -> bool:
     return sum(1 for ind in indicators if ind.upper() in text_upper) >= 2
 
 
+def _strip_tags(text: str) -> str:
+    """Last-resort plain text: drop tags + unescape entities (so users never see raw <b>)."""
+    text = re.sub(r"</?[A-Za-z][^>]*>", "", text)
+    return (text.replace("&lt;", "<").replace("&gt;", ">")
+                .replace("&quot;", '"').replace("&amp;", "&"))
+
+
 async def send_message(session: aiohttp.ClientSession, chat_id: int | str, text: str, parse_mode: str = "HTML"):
+    # Escape stray < > & in content (keep real <b>/<i>/<code> tags) so Telegram HTML never fails to parse.
+    if parse_mode == "HTML":
+        text = _sanitize_html(text)
     chunks = _split_message(text)
     for chunk in chunks:
         resp = await session.post(f"{BOT_BASE}/sendMessage", json={
@@ -299,9 +309,10 @@ async def send_message(session: aiohttp.ClientSession, chat_id: int | str, text:
         data = await resp.json()
         if not data.get("ok"):
             log.warning("sendMessage failed (parse_mode=%s): %s", parse_mode, data.get("description", ""))
+            # fall back to PLAIN TEXT with tags stripped — never show raw <b> markup
             await session.post(f"{BOT_BASE}/sendMessage", json={
                 "chat_id": chat_id,
-                "text": chunk,
+                "text": _strip_tags(chunk),
             })
         if len(chunks) > 1:
             await asyncio.sleep(0.3)

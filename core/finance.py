@@ -809,11 +809,13 @@ def format_invest_message(result: dict, amount: float) -> str:
 
 
 def _sanitize_html(text: str) -> str:
-    """Escape stray < > in text while preserving intentional <b></b> <i></i> <code></code> tags."""
+    """Escape stray < > & in text while preserving intentional <b> <i> <code> <pre> <u> <s> tags.
+    Idempotent: safe to apply to already-sanitized text (won't double-escape entities)."""
     import re
-    text = text.replace("&", "&amp;")
+    # escape & only when it is NOT already the start of an HTML entity
+    text = re.sub(r"&(?!(?:amp|lt|gt|quot|#\d+|#x[0-9a-fA-F]+);)", "&amp;", text)
     text = text.replace("<", "&lt;").replace(">", "&gt;")
-    for tag in ("b", "i", "code"):
+    for tag in ("b", "i", "code", "pre", "u", "s"):
         text = text.replace(f"&lt;{tag}&gt;", f"<{tag}>")
         text = text.replace(f"&lt;/{tag}&gt;", f"</{tag}>")
     return text
